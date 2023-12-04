@@ -17,7 +17,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     DecentralizationId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AuthorityName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AuthorityName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -32,7 +32,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     OrderStatusId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,7 +61,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     ProductTypeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameProductType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameProductType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageTypeProduct = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -75,15 +75,16 @@ namespace QuanLyDatDoAnAPI.Migrations
                 name: "Account",
                 columns: table => new
                 {
-                    AccountId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     DecentralizationId = table.Column<int>(type: "int", nullable: true),
                     ResetPasswordToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResetPasswordTokenExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -92,7 +93,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Account", x => x.AccountId);
+                    table.PrimaryKey("PK_Account", x => x.UserId);
                     table.ForeignKey(
                         name: "FK_Account_Decentralization_DecentralizationId",
                         column: x => x.DecentralizationId,
@@ -133,7 +134,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     CartId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -141,10 +142,11 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     table.PrimaryKey("PK_Carts", x => x.CartId);
                     table.ForeignKey(
-                        name: "FK_Carts_Account_AccountId",
-                        column: x => x.AccountId,
+                        name: "FK_Carts_Account_UserId",
+                        column: x => x.UserId,
                         principalTable: "Account",
-                        principalColumn: "AccountId");
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -153,8 +155,8 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: true),
                     PaymentId = table.Column<int>(type: "int", nullable: true),
-                    AccountId = table.Column<int>(type: "int", nullable: true),
                     OriginalPrice = table.Column<double>(type: "float", nullable: true),
                     ActualPrice = table.Column<double>(type: "float", nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -169,10 +171,10 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     table.PrimaryKey("PK_Order", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_Order_Account_AccountId",
-                        column: x => x.AccountId,
+                        name: "FK_Order_Account_UserId",
+                        column: x => x.UserId,
                         principalTable: "Account",
-                        principalColumn: "AccountId");
+                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_Order_OrderStatus_OrderStatusId",
                         column: x => x.OrderStatusId,
@@ -186,33 +188,13 @@ namespace QuanLyDatDoAnAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductImage",
-                columns: table => new
-                {
-                    ProductImageId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageProduct = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProductId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductImage", x => x.ProductImageId);
-                    table.ForeignKey(
-                        name: "FK_ProductImage_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product",
-                        principalColumn: "ProductId");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProductReview",
                 columns: table => new
                 {
                     ProductReviewId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: true),
-                    AccountId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true),
                     ContentRated = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PointEvaluation = table.Column<int>(type: "int", nullable: true),
                     ContentSeen = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -224,10 +206,10 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     table.PrimaryKey("PK_ProductReview", x => x.ProductReviewId);
                     table.ForeignKey(
-                        name: "FK_ProductReview_Account_AccountId",
-                        column: x => x.AccountId,
+                        name: "FK_ProductReview_Account_UserId",
+                        column: x => x.UserId,
                         principalTable: "Account",
-                        principalColumn: "AccountId");
+                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_ProductReview_Product_ProductId",
                         column: x => x.ProductId,
@@ -268,7 +250,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     OrderDetailId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderId = table.Column<int>(type: "int", nullable: true),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: true),
                     PriceTotal = table.Column<double>(type: "float", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: true),
@@ -282,7 +264,8 @@ namespace QuanLyDatDoAnAPI.Migrations
                         name: "FK_OrderDetail_Order_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Order",
-                        principalColumn: "OrderId");
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OrderDetail_Product_ProductId",
                         column: x => x.ProductId,
@@ -306,14 +289,9 @@ namespace QuanLyDatDoAnAPI.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Carts_AccountId",
+                name: "IX_Carts_UserId",
                 table: "Carts",
-                column: "AccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Order_AccountId",
-                table: "Order",
-                column: "AccountId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_OrderStatusId",
@@ -324,6 +302,11 @@ namespace QuanLyDatDoAnAPI.Migrations
                 name: "IX_Order_PaymentId",
                 table: "Order",
                 column: "PaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Order_UserId",
+                table: "Order",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetail_OrderId",
@@ -341,19 +324,14 @@ namespace QuanLyDatDoAnAPI.Migrations
                 column: "ProductTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductImage_ProductId",
-                table: "ProductImage",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductReview_AccountId",
-                table: "ProductReview",
-                column: "AccountId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductReview_ProductId",
                 table: "ProductReview",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductReview_UserId",
+                table: "ProductReview",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -364,9 +342,6 @@ namespace QuanLyDatDoAnAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "OrderDetail");
-
-            migrationBuilder.DropTable(
-                name: "ProductImage");
 
             migrationBuilder.DropTable(
                 name: "ProductReview");

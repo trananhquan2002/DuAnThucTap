@@ -6,7 +6,7 @@ namespace QuanLyDatDoAnAPI.Entities
     {
         [Key]
         public int OrderStatusId { get; set; }
-        public string? StatusName { get; set; }
+        public string StatusName { get; set; }
         public IEnumerable<Order>? Orders { get; set; }
     }
 }

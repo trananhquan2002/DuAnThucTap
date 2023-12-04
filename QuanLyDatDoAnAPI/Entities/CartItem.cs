@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace QuanLyDatDoAnAPI.Entities
 {
@@ -6,12 +7,19 @@ namespace QuanLyDatDoAnAPI.Entities
     {
         [Key]
         public int CartItemId { get; set; }
+        [JsonIgnore]
         public int? ProductId { get; set; }
-        public int? CartId { get; set; }
-        public int? Quantity { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
-        public Carts? Cart { get; set; }
+        [JsonIgnore]
         public Product? Product { get; set; }
+        [JsonIgnore]
+        public int? CartId { get; set; }
+        [JsonIgnore]
+        public Carts? Cart { get; set; }
+        [JsonIgnore]
+        public int? Quantity { get; set; }
+        [JsonIgnore]
+        public DateTime? CreatedAt { get; set; }
+        [JsonIgnore]
+        public DateTime? UpdateAt { get; set; }
     }
 }

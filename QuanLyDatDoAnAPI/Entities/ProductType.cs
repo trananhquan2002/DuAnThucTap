@@ -6,7 +6,7 @@ namespace QuanLyDatDoAnAPI.Entities
     {
         [Key]
         public int ProductTypeId { get; set; }
-        public string? NameProductType { get; set; }
+        public string NameProductType { get; set; }
         public string? ImageTypeProduct { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }

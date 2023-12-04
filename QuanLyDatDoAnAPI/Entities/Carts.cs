@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace QuanLyDatDoAnAPI.Entities
 {
@@ -6,10 +8,15 @@ namespace QuanLyDatDoAnAPI.Entities
     {
         [Key]
         public int CartId { get; set; }
-        public int? AccountId { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
+        [JsonIgnore]
+        public int UserId { get; set; }
+        [ForeignKey("UserId")]
         public Account? Account { get; set; }
+        [JsonIgnore]
+        public DateTime? CreatedAt { get; set; }
+        [JsonIgnore]
+        public DateTime? UpdateAt { get; set; }
+        [JsonIgnore]
         public IEnumerable<CartItem>? CartItems { get; set; }
     }
 }

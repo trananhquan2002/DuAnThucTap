@@ -12,8 +12,8 @@ using QuanLyDatDoAnAPI.Entities;
 namespace QuanLyDatDoAnAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231103093705_update_v.2")]
-    partial class update_v2
+    [Migration("20231204043556_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,11 @@ namespace QuanLyDatDoAnAPI.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
@@ -60,13 +64,14 @@ namespace QuanLyDatDoAnAPI.Migrations
                     b.Property<DateTime?>("ResetPasswordTokenExpiry")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Status")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
@@ -116,18 +121,18 @@ namespace QuanLyDatDoAnAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
 
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("CartId");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Carts");
                 });
@@ -141,6 +146,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecentralizationId"));
 
                     b.Property<string>("AuthorityName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -161,9 +167,6 @@ namespace QuanLyDatDoAnAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
-
-                    b.Property<int?>("AccountUserId")
-                        .HasColumnType("int");
 
                     b.Property<double?>("ActualPrice")
                         .HasColumnType("float");
@@ -200,11 +203,11 @@ namespace QuanLyDatDoAnAPI.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("AccountUserId");
-
                     b.HasIndex("OrderStatusId");
 
                     b.HasIndex("PaymentId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Order");
                 });
@@ -220,7 +223,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<double?>("PriceTotal")
@@ -253,6 +256,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderStatusId"));
 
                     b.Property<string>("StatusName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("OrderStatusId");
@@ -283,50 +287,6 @@ namespace QuanLyDatDoAnAPI.Migrations
                     b.HasKey("PaymentId");
 
                     b.ToTable("Payment");
-                });
-
-            modelBuilder.Entity("QuanLyDatDoAnAPI.Entities.PaymentResponse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("OrderDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OrderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Success")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VnPayResponseCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VNPay");
                 });
 
             modelBuilder.Entity("QuanLyDatDoAnAPI.Entities.Product", b =>
@@ -374,30 +334,6 @@ namespace QuanLyDatDoAnAPI.Migrations
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("QuanLyDatDoAnAPI.Entities.ProductImage", b =>
-                {
-                    b.Property<int>("ProductImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductImageId"));
-
-                    b.Property<string>("ImageProduct")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductImageId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductImage");
-                });
-
             modelBuilder.Entity("QuanLyDatDoAnAPI.Entities.ProductReview", b =>
                 {
                     b.Property<int>("ProductReviewId")
@@ -405,9 +341,6 @@ namespace QuanLyDatDoAnAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductReviewId"));
-
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ContentRated")
                         .HasColumnType("nvarchar(max)");
@@ -430,11 +363,14 @@ namespace QuanLyDatDoAnAPI.Migrations
                     b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("ProductReviewId");
 
-                    b.HasIndex("AccountId");
-
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProductReview");
                 });
@@ -454,6 +390,7 @@ namespace QuanLyDatDoAnAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameProductType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateAt")
@@ -492,18 +429,16 @@ namespace QuanLyDatDoAnAPI.Migrations
                 {
                     b.HasOne("QuanLyDatDoAnAPI.Entities.Account", "Account")
                         .WithMany("Carts")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
                 });
 
             modelBuilder.Entity("QuanLyDatDoAnAPI.Entities.Order", b =>
                 {
-                    b.HasOne("QuanLyDatDoAnAPI.Entities.Account", "Account")
-                        .WithMany("Orders")
-                        .HasForeignKey("AccountUserId");
-
-                    b.HasOne("QuanLyDatDoAnAPI.Entities.OrderStatus", "OrderStatus")
+                    b.HasOne("QuanLyDatDoAnAPI.Entities.OrderStatus", "Status")
                         .WithMany("Orders")
                         .HasForeignKey("OrderStatusId");
 
@@ -511,18 +446,24 @@ namespace QuanLyDatDoAnAPI.Migrations
                         .WithMany("Orders")
                         .HasForeignKey("PaymentId");
 
+                    b.HasOne("QuanLyDatDoAnAPI.Entities.Account", "Account")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Account");
 
-                    b.Navigation("OrderStatus");
-
                     b.Navigation("Payment");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("QuanLyDatDoAnAPI.Entities.OrderDetail", b =>
                 {
                     b.HasOne("QuanLyDatDoAnAPI.Entities.Order", "Order")
                         .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("QuanLyDatDoAnAPI.Entities.Product", "Product")
                         .WithMany("OrderDetails")
@@ -542,24 +483,15 @@ namespace QuanLyDatDoAnAPI.Migrations
                     b.Navigation("ProductType");
                 });
 
-            modelBuilder.Entity("QuanLyDatDoAnAPI.Entities.ProductImage", b =>
-                {
-                    b.HasOne("QuanLyDatDoAnAPI.Entities.Product", "Product")
-                        .WithMany("ProductImages")
-                        .HasForeignKey("ProductId");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("QuanLyDatDoAnAPI.Entities.ProductReview", b =>
                 {
-                    b.HasOne("QuanLyDatDoAnAPI.Entities.Account", "Account")
-                        .WithMany("ProductReviews")
-                        .HasForeignKey("AccountId");
-
                     b.HasOne("QuanLyDatDoAnAPI.Entities.Product", "Product")
                         .WithMany("ProductReviews")
                         .HasForeignKey("ProductId");
+
+                    b.HasOne("QuanLyDatDoAnAPI.Entities.Account", "Account")
+                        .WithMany("ProductReviews")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Account");
 
@@ -605,8 +537,6 @@ namespace QuanLyDatDoAnAPI.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("OrderDetails");
-
-                    b.Navigation("ProductImages");
 
                     b.Navigation("ProductReviews");
                 });
